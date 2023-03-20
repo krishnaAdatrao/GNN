@@ -1,5 +1,7 @@
 # GNN - Graph Neural Networks
 
+Note: This work will be related to GNN in future.
+
 Graph Neural Networks (GNNs) are a type of neural network designed to operate on graph data structures. In contrast to other deep learning approaches that process data in tabular or sequential forms, GNNs can capture dependencies between entities in arbitrary graph structures, including social networks, knowledge graphs, and molecular structures.
 
 At a high level, GNNs operate by propagating information through graph edges and nodes to learn representations of the nodes that incorporate information from their local graph neighborhoods. This information propagation is typically achieved by applying a series of graph convolutional operations that update the hidden representations of nodes by aggregating and transforming information from their neighbors.
