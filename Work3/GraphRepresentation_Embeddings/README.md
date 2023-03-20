@@ -1,0 +1,1 @@
+PickleFile (Produces Pickle File => edgelist.pkl) → DataFrame (Generates Dataset with Node1, Node2, Edge => n2e.csv) → GraphRepresentation (Generates a graph => Fig1) → Pubmed_Embeddings (Generates vector representations for Nodes and Edges)
