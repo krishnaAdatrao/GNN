@@ -10,24 +10,15 @@ from functools import partial
 from joblib import Parallel, delayed
 from tqdm.auto import tqdm
 from tqdm import tqdm
-
 # from .parallel import parallel_generate_walks
 # from node2vec import Node2Vec
 # from node2vec.edges import HadamardEmbedder
 
-# Whole Dataset:
-dataset = pd.read_csv("n2e.csv")
-# # print(dataset)
-# node1 = list(dataset['Node1'])
-# node2 = list(dataset['Node2'])
-# edges = list(dataset['EdgeWeight'])
-# nodes = set(node1+node2)
-# nodes_edges = list(zip(node1, node2, edges))
-# # print(nodes_edges)
-# # print(len(nodes))
+# loading dataset
+dataset = pd.read_csv("/home/krishna/Projects/GNN/Work/Work3/n2e.csv")
 
-# Sample Dataset with 100 rows
-sample_data = dataset.iloc[:100, :]
+# Sample Dataset with 300 rows
+sample_data = dataset.iloc[:1000, :]
 # print(sample_data)
 node1 = list(sample_data['Node1'])
 node2 = list(sample_data['Node2'])
@@ -45,16 +36,14 @@ graph_network.add_weighted_edges_from(nodes_edges)
 graph_nodes = graph_network.nodes
 graph_edges = graph_network.edges
 pos = nx.spring_layout(graph_network)
-print("\n\n Graph Contains: ", nx.info(graph_network))
+# print("\n\n Graph Contains: ", nx.info(graph_network))
 weight = nx.get_edge_attributes(graph_network, 'weight')
 plt.figure(figsize = (50,20))
 nx.draw(graph_network, pos, edge_color = 'black', width = 1, linewidths = 1, node_size = 500, with_labels = True)
 nx.draw_networkx_edge_labels(graph_network, pos, edge_labels = weight, font_color = 'red')
 plt.axis('off')
-plt.savefig('fig1.png')
-plt.show()
-print("\n\n Is the graph is weighted Graph? \n\n", nx.is_weighted(graph_network))
-print("\n Is the graph is directed graph? \n\n", nx.is_directed(graph_network), "\n\n")
+# plt.savefig('Graph_300_pb.png')
+# plt.show()
 
 # graph_network = nx.from_pandas_edgelist(sample_data, 'Node1', 'Node2', edge_attr = 'EdgeWeight')
 # print(graph_network)
@@ -437,20 +426,73 @@ class WeightedL2Embedder(EdgeEmbedder):
     def _embed(self, edge: tuple):
         return (self.kv[edge[0]] - self.kv[edge[1]]) ** 2
 
-# Node Embeddings:
-node2vec = Node2Vec(graph_network, dimensions=64, walk_length=30, num_walks=200, workers=4)
+# Train the Node2Vec model
+node2vec = Node2Vec(graph_network, dimensions=64, walk_length=34, num_walks=200, workers=4)
 model = node2vec.fit(window=10, min_count=1, batch_words=4)
-print("\n\nNodes: ", nodes, "\n\n")
-print("Node Embeddings: \n\n", model.wv.get_vector(23), "\n\n") # 23 is the node number, there are only 24 nodes in the first 100 rows of the data.
-# Else we can also give the node name as '23679' which is 23rd node in the data.
-print("Similar: ", model.wv.most_similar('4'), "\n\n")
-
-# Edge Embeddings:
 edges_embs = HadamardEmbedder(keyed_vectors=model.wv)
-print(f'Node Pairs: \n\n {node_pairs}', "\n\n")
-print("Edge Embeddings: \n\n", edges_embs[('4', '39')], "\n\n")
 
+print("\n\n Is the graph is weighted Graph? \n\n", nx.is_weighted(graph_network))
+print("\n Is the graph is directed graph? \n\n", nx.is_directed(graph_network), "\n\n")
 
+# Node 1 and Node 2 represent the two publications.
+# Edge1 or Edge Weight represent the strength of the citation relationship between the two publications.
+print("\n\nTotal number of Nodes (Publication IDs): \n", len(nodes), "\n\n")
+print("\n\n All the Nodes (Publication IDs): \n", nodes, "\n\n") # Will provide all the nodes in the graph
+print(f'Total number of Node Pairs (Publication Pairs): \n\n {len(node_pairs)}', "\n\n")
+print(f'Node Pairs (Publication Pairs): \n\n {node_pairs}', "\n\n") # Will illustrate the pairing of nodes
 
+edge_nod1 = input("To visualise edge embeddings, \n\nPlease enter Publication ID (Node 1): ")
+edge_nod2 = input("Now, please enter another Publication ID (Node 2): ")
+# edge_nod1 = '4'
+# edge_nod2 = '39'
+print(f"\n\nEdge Embedding of Publication ID_pair ~ [{edge_nod1}, {edge_nod2}]: \n\n", edges_embs[(edge_nod1, edge_nod2)], "\n\n")
 
+# 23 is the node number, there are only 34 nodes in the first 300 rows of the data.
+# Else we can also give the node name as '23679' which is 23rd node in the data.
+# node_nod = '4'
+node_nod = input("To visualise node embeddings, \n\nPlease enter your preferred Publication ID (Node): ")
+print(f"\n\nNode Embedding of Publication ID ~ {node_nod}: \n\n", model.wv.get_vector(node_nod), "\n\n")
+
+# sim_nod = '39'
+sim_nod = input("Enter the Publication ID (Node) to generate the simlar list of publications: ")
+similar_pub_df = pd.DataFrame(model.wv.most_similar(sim_nod), columns=['Similar Publication IDs', 'Similarity Percentage (%)'])
+print(f'\n\nList of similar results for publication ID - {sim_nod}: \n\n', similar_pub_df, "\n\n")
+
+# model.wv.rank: This function finds the rank of a given node or edge in the model vocabulary based on its similarity to other nodes or edges.
+# rank_nod1 = '4'
+# rank_nod2 = '39'
+rank_nod1 = input("To find the rank of the node pair, \n\nPlease enter Node1: ")
+rank_nod2 = input("Now, please enter Node2: ")
+print(f'\nThe rank of the given Node Pair ~ [{rank_nod1}, {rank_nod2}]:', model.wv.rank(rank_nod1, rank_nod2))
+
+# model.wv.doesnt_match: This function finds the node or edge that does not belong in a given set of nodes or edges.
+# doesnt_nod1 = '4'
+# doesnt_nod2 = '39'
+doesnt_nod1 = input("\n\nTo find non-matched of the node pair, \n\nPlease enter Node1: ")
+doesnt_nod2 = input("Now, please enter Node2: ")
+non_match = model.wv.doesnt_match([doesnt_nod1, doesnt_nod2])
+print(f'\nThe non-matching node in the given node pair [{doesnt_nod1}, {doesnt_nod2}] is: {non_match}')
+
+# Storing Embeddings
+Node_Embeddings = [model.wv.get_vector(str(i)) for i in nodes]
+Edge_Embeddings = [edges_embs[(str(j[0]), str(j[1]))] for i, j in enumerate(node_pairs)]
+print("\n\nTotal number of Node Embeddings", len(Node_Embeddings))
+print("\n\nTotal number of Edge Embeddings", len(Edge_Embeddings))
+
+# K-Means Clustering
+from sklearn.cluster import KMeans
+# Node Embeddings ~ Clustering
+num_clusters = 5 # Number of clusters to create
+kmeans = KMeans(n_clusters=num_clusters)
+node_labels = kmeans.fit_predict(Node_Embeddings)
+# Edge Embeddings ~ Clustering
+num_clusters = 5 # Number of clusters to create
+kmeans = KMeans(n_clusters=num_clusters)
+edge_labels = kmeans.fit_predict(Edge_Embeddings)
+# print("\n\nnode_labels:", node_labels)
+# print("\n\nedge_labels:", edge_labels)
+cluster_node_df = pd.DataFrame({'Publication IDs': list(nodes), 'Clustering (K=5)': node_labels})
+print(f'\n\nK-Means Custering results for publication IDs: \n\n', cluster_node_df, "\n\n")
+cluster_edge_df = pd.DataFrame({'Publication ID_Pairs': node_pairs, 'Clustering (K=5)': edge_labels})
+print(f'\n\nK-Means Custering results for publication IDs: \n\n', cluster_edge_df, "\n\n")
 
