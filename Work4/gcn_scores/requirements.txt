@@ -1,0 +1,62 @@
+absl-py==1.4.0
+aiohttp==3.8.4
+aiosignal==1.3.1
+astunparse==1.6.3
+async-timeout==4.0.2
+asynctest==0.13.0
+attrs==23.1.0
+backcall @ file:///home/ktietz/src/ci/backcall_1611930011877/work
+cachetools==5.3.0
+certifi @ file:///croot/certifi_1671487769961/work/certifi
+chardet==5.1.0
+charset-normalizer==3.1.0
+cycler==0.11.0
+datasets==2.12.0
+decorator @ file:///opt/conda/conda-bld/decorator_1643638310831/work
+dill==0.3.6
+entrypoints @ file:///tmp/build/80754af9/entrypoints_1649908585034/work
+filelock==3.12.0
+flatbuffers==23.3.3
+fonttools==4.38.0
+frozenlist==1.3.3
+fsspec==2023.1.0
+gast==0.4.0
+gensim==4.2.0
+google-auth==2.17.3
+google-auth-oauthlib==0.4.6
+google-pasta==0.2.0
+grpcio==1.54.0
+h5py==3.8.0
+huggingface-hub==0.14.1
+idna==3.4
+importlib-metadata==6.6.0
+install==1.3.5
+ipykernel @ file:///home/conda/feedstock_root/build_artifacts/ipykernel_1620912939357/work/dist/ipykernel-5.5.5-py3-none-any.whl
+ipython @ file:///home/conda/feedstock_root/build_artifacts/ipython_1651240553635/work
+ipython-genutils @ file:///tmp/build/80754af9/ipython_genutils_1606773439826/work
+jedi @ file:///tmp/build/80754af9/jedi_1644299024593/work
+Jinja2==3.1.2
+joblib==1.2.0
+jupyter-client==5.3.4
+jupyter-core==4.5.0
+keras==2.11.0
+kiwisolver==1.4.4
+libclang==16.0.0
+Markdown==3.4.3
+MarkupSafe==2.1.2
+matplotlib==3.5.3
+matplotlib-inline @ file:///opt/conda/conda-bld/matplotlib-inline_1662014470464/work
+multidict==6.0.4
+multiprocess==0.70.14
+networkx==2.6.3
+node2vec==0.4.3
+numpy==1.21.6
+nvidia-cublas-cu11==11.10.3.66
+nvidia-cuda-nvrtc-cu11==11.7.99
+nvidia-cuda-runtime-cu11==11.7.99
+nvidia-cudnn-cu11==8.5.0.96
+oauthlib==3.2.2
+opt-einsum==3.3.0
+packaging==23.1
+pandas==1.3.5
+parso @ file:///opt/conda/conda-bld/parso_1641458642106/work
